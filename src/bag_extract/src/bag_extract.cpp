@@ -2,9 +2,6 @@
 #include <boost/filesystem.hpp>
 #include <rosbag/bag.h>
 #include <rosbag/view.h>
-//#include <pcl/io/io.h>
-//#include <pcl/filters/filter.h>
-//#include <pcl/io/pcd_io.h>
 #include <sensor_msgs/Image.h>
 #include <cv_bridge/cv_bridge.h>
 #include <pcl_conversions/pcl_conversions.h>
@@ -103,7 +100,7 @@ int main (int argc, char** argv)
           image = cv::imdecode(cv::Mat(img_compressed->data),1);      
         } catch(cv_bridge::Exception)
         {
-          ROS_ERROR("decode msg failed");
+          std::cerr<<"decode msg failed"<<std::endl;
         }
       
         if (!image.empty()) {
@@ -112,10 +109,10 @@ int main (int argc, char** argv)
           ss << argv[2] + topic <<"/" << img_compressed->header.stamp <<".jpg";
           std::string filename = ss.str();
           cv::imwrite(filename, image);
-          ROS_INFO("Saved image (%s)  %s", img_compressed->format.c_str(), filename.c_str());
+          std::cout<<"Saved image (" <<img_compressed->format.c_str() <<") " << filename << std::endl;
           //count_++;
         } else {
-          ROS_WARN("Couldn't save image, no data!");
+          std::cerr<<"Couldn't save image, no data!"<<std::endl;
         }
     }
 
@@ -131,7 +128,7 @@ int main (int argc, char** argv)
         image = cv_bridge::toCvShare(img, "bgr8")->image;
       } catch(cv_bridge::Exception)
       {
-        ROS_ERROR("decode msg failed");
+        std::cerr<<"decode msg failed"<<std::endl;
       }
     
       if (!image.empty()) {
@@ -142,10 +139,10 @@ int main (int argc, char** argv)
         
 
         cv::imwrite(filename, image);
-        ROS_INFO("Saved image  %s", filename.c_str());
+        std::cout<<"Saved image  "<< filename <<std::endl;
         
       } else {
-        ROS_WARN("Couldn't save image, no data!");
+        std::cerr<< "Couldn't save image, no data!"<<std::endl;
       }
     }
     
